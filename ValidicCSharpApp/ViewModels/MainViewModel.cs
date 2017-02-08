@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ValidicCSharp;
