@@ -29,3 +29,4 @@ File validic.json used for keeping "OrganizationId" and "AccessToken". By defult
 You can add your organization info to it test you organization data.
 
 Feel free to contact me with updates, pull requests, or questions here: alan.kharebov@validic.com
+
