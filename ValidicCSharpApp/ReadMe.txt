@@ -1,0 +1,1 @@
+﻿Update .\ValidicCSharpApp\Models\MainModel.cs with your OrganizationId and AccessToken

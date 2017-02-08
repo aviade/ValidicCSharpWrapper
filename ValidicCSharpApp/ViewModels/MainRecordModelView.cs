@@ -1,17 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using ValidicCSharp;
 using ValidicCSharp.Model;
 using ValidicCSharp.Request;
 using ValidicCSharp.Utility;
-using ValidicCSharpApp.Models;
 using ValidicCSharpApp.Views.DataViews;
 
 namespace ValidicCSharpApp.ViewModels
