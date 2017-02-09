@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -39,14 +40,16 @@ namespace ValidicCSharpApp.ViewModels
         public RelayCommand CommandGetOrganizationMeData { get; private set; }
         public RelayCommand CommandGetOrganizationApps { get; private set; }
         public RelayCommand CommandDataSelected { get; private set; }
-        public RelayCommand CommandMeUpdate { get; private set; }
-        public RelayCommand CommandMeUpdateAll { get; private set; }
+        public RelayCommand CommandMeAddUser { get; private set; }
+        public RelayCommand CommandMeConnectToDevice { get; private set; }
+        public RelayCommand CommandMeRefreshToken { get; private set; }
+        public RelayCommand CommandMeRefreshTokenAll { get; private set; }
 
         #endregion
 
         #region Properties
 
-        public OrganizationAuthenticationCredentials OrganizationAuthenticationCredential { get; set; }
+        public OrganizationAuthenticationCredentials OrganizationAuthenticationCredential { get; }
 
         public Organization Organization
         {
@@ -109,6 +112,7 @@ namespace ValidicCSharpApp.ViewModels
 
                 _selectedMeRecord = value;
                 RaisePropertyChanged();
+                CommandMeConnectToDevice.RaiseCanExecuteChanged();
             }
         }
 
@@ -116,8 +120,10 @@ namespace ValidicCSharpApp.ViewModels
 
         #region Constructor
 
-        public MainRecordModelView()
+        public MainRecordModelView(OrganizationAuthenticationCredentials organizationAuthenticationCredential)
         {
+            OrganizationAuthenticationCredential = organizationAuthenticationCredential;
+
             MeData = new ObservableCollection<MeViewModel>();
 
             CommandGetOrganization = new RelayCommand(GetOrganization, () => true);
@@ -137,12 +143,13 @@ namespace ValidicCSharpApp.ViewModels
             CommandGetOrganizationApps = new RelayCommand(GetOrganizationApps, () => true);
             // 
             CommandDataSelected = new RelayCommand(DataSelected, () => true);
-            CommandMeUpdate = new RelayCommand(async () =>  await MeUpdateAsync(), () => true);
-            CommandMeUpdateAll = new RelayCommand(MeUpdateAll, () => true);
+            CommandMeAddUser = new RelayCommand(async () => await AddUserAsync(), () => true);
+            CommandMeConnectToDevice = new RelayCommand(MeConnectToDeviceAsync, CanMeConnectToDevice);
+            CommandMeRefreshToken = new RelayCommand(async () =>  await MeUpdateAsync(), () => true);
+            CommandMeRefreshTokenAll = new RelayCommand(MeUpdateAll, () => true);
         }
 
         #endregion
-
 
         #region  Commands Implemenation
 
@@ -274,8 +281,48 @@ namespace ValidicCSharpApp.ViewModels
             //            RaisePropertyChanged("Organization");
         }
 
+        private async Task AddUserAsync()
+        {
+            var oac = OrganizationAuthenticationCredential;
+            if (oac == null)
+                return;
 
-        private async Task UpdateAsync(MeViewModel record)
+            var uid = "TestUser" + MakeRandom();
+
+            var client = new Client { AccessToken = oac.AccessToken };
+            var command = new Command()
+                .AddUser(new AddUserRequest
+                {
+                    access_token = client.AccessToken,
+                    user = new UserRequest { Uid = uid},
+                })
+                .ToOrganization(oac.OrganizationId);
+
+            var json = await client.PerformCommandAsync(command);
+            AddUserResponse response = json.Objectify<AddUserResponse>();
+
+            MeData.Add(new MeViewModel
+            {
+                Me = new Me { Id = response.user._id},
+                RefreshToken = new RefreshToken
+                {
+                    AuthenticationToken = response.user.access_token,
+                    Uid = response.user.uid
+                }
+            });
+            RaisePropertyChanged("MeData");
+
+        }
+
+        private static int MakeRandom(int to = 10000)
+        {
+            var random = new Random();
+            return random.Next(0, to);
+        }
+
+
+
+        private async Task RefreshTokenAsync(MeViewModel record)
         {
             var oac = OrganizationAuthenticationCredential;
             if (oac == null)
@@ -284,11 +331,13 @@ namespace ValidicCSharpApp.ViewModels
             var client = new Client { AccessToken = oac.AccessToken };
             var result = await client.GetUserRefreshTokenAsync(record.Me.Id, oac.OrganizationId);
             record.RefreshToken = result.Object;
+
+            CommandMeConnectToDevice.RaiseCanExecuteChanged();
         }
 
         private async Task MeUpdateAsync()
         {
-            await UpdateAsync(SelectedMeRecord);
+            await RefreshTokenAsync(SelectedMeRecord);
         }
 
         private void MeUpdateAll()
@@ -296,13 +345,41 @@ namespace ValidicCSharpApp.ViewModels
             foreach (var record in MeData)
             {
                 Debug.WriteLine(record);
-                Dispatcher(async () => await UpdateAsync(record));
+                Dispatcher(async () => await RefreshTokenAsync(record));
             }
+        }
+
+        private bool CanMeConnectToDevice()
+        {
+            var authenticationToken = SelectedMeRecord?.RefreshToken?.AuthenticationToken;
+            if (authenticationToken == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void MeConnectToDeviceAsync()
+        {
+            // Get user access token
+            var authenticationToken = SelectedMeRecord?.RefreshToken?.AuthenticationToken;
+            if (authenticationToken == null)
+            {
+                return;
+            }
+
+            var oac = OrganizationAuthenticationCredential;
+            if (oac == null)
+                return;
+
+            string relativeUrl = UrlBuilder.GetRequestAccessUrl(oac.OrganizationId, authenticationToken);
+            var uri = new Uri(Client.ConnectToDeviceUrl, relativeUrl);
+            Dispatcher(() => Process.Start(new ProcessStartInfo(uri.AbsoluteUri)));
         }
 
 
         #endregion
-
 
         private void TestSelecteData()
         {
