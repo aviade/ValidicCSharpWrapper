@@ -16,7 +16,9 @@ namespace ValidicCSharp
         public static bool EnableLogging = false;
         public static string ApplicationId;
         public static Action<LogItem> AddLine = null;
-        private readonly Uri _baseUrl = new Uri("https://api.validic.com/v1/");
+        public static readonly Uri ConnectToDeviceUrl = new Uri("https://app.validic.com/");
+        private static readonly Uri _baseUrl = new Uri("https://api.validic.com/");
+        private static readonly Uri _baseUrlWithVersion = new Uri(_baseUrl, "v1/");
         public string AccessToken = "DEMO_KEY";
 
         private static void OnAddLine(LogItem l)
@@ -66,11 +68,9 @@ namespace ValidicCSharp
             client.Headers.Add("Content-Type", "application/json; charset=utf-8");
         }
 
-
-        public string ExecuteWebCommand(string command, HttpMethod method, object payload = null)
+        public string ExecuteWebCommand(string address, HttpMethod method, object payload = null)
         {
             string json = null;
-            var address = _baseUrl + command;
             if (EnableLogging)
             {
                 Debug.WriteLine(address);
@@ -102,10 +102,9 @@ namespace ValidicCSharp
             return json;
         }
 
-        public async Task<string> ExecuteWebCommandAsync(string command, HttpMethod method, object payload = null)
+        public async Task<string> ExecuteWebCommandAsync(string address, HttpMethod method, object payload = null)
         {
             string json = null;
-            var address = _baseUrl + command;
             if (EnableLogging)
             {
                 Debug.WriteLine(address);
@@ -150,14 +149,16 @@ namespace ValidicCSharp
         public string PerformCommand(Command command)
         {
             AppendAuth(command);
-            var commandText = command.ToString();
-            return ExecuteWebCommand(commandText, command.Method, command.Payload);
+            var relativeUri = command.GetRelativeUrl();
+            Uri address = new Uri(_baseUrlWithVersion, relativeUri);
+            return ExecuteWebCommand(address.AbsoluteUri, command.Method, command.Payload);
         }
         public async Task<string> PerformCommandAsync(Command command)
         {
             AppendAuth(command);
-            var commandText = command.ToString();
-            return await ExecuteWebCommandAsync(commandText, command.Method, command.Payload);
+            var relativeUri = command.GetRelativeUrl();
+            Uri address = new Uri(_baseUrlWithVersion, relativeUri);
+            return await ExecuteWebCommandAsync(address.AbsoluteUri, command.Method, command.Payload);
         }
 
         public void AppendAuth(Command command)

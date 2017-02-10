@@ -19,8 +19,7 @@ namespace ValidicCSharpApp.ViewModels
             OpenOrCreateModel();
             foreach (var organizationAuthenticationCredential in Model.OrganizationAuthenticationCredentials)
             {
-                var record = new MainRecordModelView();
-                record.OrganizationAuthenticationCredential = organizationAuthenticationCredential;
+                var record = new MainRecordModelView(organizationAuthenticationCredential);
                 MainRecords.Add(record);
             }
             SelectedMainRecord = MainRecords[0];

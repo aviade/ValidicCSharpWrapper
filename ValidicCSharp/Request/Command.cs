@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using ValidicCSharp.Interfaces;
@@ -32,33 +30,14 @@ namespace ValidicCSharp.Request
         public object Payload { get; set; }
         public bool Latest { get; set; }
 
+        public string GetRelativeUrl()
+        {
+            return UrlBuilder.FromCommand(this);
+        }
+
         public override string ToString()
         {
-            var target = "";
-
-            // User
-            if (UserId != null)
-                target = "/" + UserId + target;
-            if (User)
-                target = "/users" + target;
-
-            // Organization
-            if (OrganizationId != null)
-                target = "/" + OrganizationId + target;
-            if (Organization)
-                target = "organizations" + target;
-
-            if (Type != CommandType.None)
-                target += "/" + Type.ToString().ToLower() + (Latest ? "/latest" : "") + ".json";
-
-            else if (Type == CommandType.None && (UserId != null || Payload != null)) target += ".json";
-            else target += "/";
-
-            target += "?nocache=" + NoCache;
-            if (Filters != null && Filters.Count > 0)
-                target = Filters.Aggregate(target, (current, commandFilter) => current + commandFilter.ToString());
-
-            return target;
+            return GetRelativeUrl();
         }
     }
 

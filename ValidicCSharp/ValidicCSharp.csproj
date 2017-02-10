@@ -59,6 +59,7 @@
     <Compile Include="Request\AuthenticationTokenFilter.cs" />
     <Compile Include="Request\BaseFilter.cs" />
     <Compile Include="Request\Command.cs" />
+    <Compile Include="Request\UrlBuilder.cs" />
     <Compile Include="Request\FromDateFilter.cs" />
     <Compile Include="Request\SourceFilter.cs" />
     <Compile Include="Request\ToDateFilter.cs" />
