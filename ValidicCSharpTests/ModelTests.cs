@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using ValidicCSharp;
@@ -84,7 +85,7 @@ namespace ValidicCSharpTests
             AssertUserCreated(response1);
             var response2 = Customer.AddUser(uid);
             Assert.IsTrue(response2.user == null);
-            Assert.IsTrue(response2.code == (int)StatusCode.Conflict);
+            Assert.IsTrue(response2.code == HttpStatusCode.Conflict);
         }
 
         [Test]
