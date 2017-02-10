@@ -47,7 +47,7 @@ namespace ValidicCSharp
                 var response = ex.Response as HttpWebResponse;
                 if (response != null)
                 {
-                    addUserResponse.code = (int)response.StatusCode;
+                    addUserResponse.code = response.StatusCode;
                     addUserResponse.message = response.StatusDescription;
                 }
                 else
