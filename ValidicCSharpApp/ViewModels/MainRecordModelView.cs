@@ -311,7 +311,6 @@ namespace ValidicCSharpApp.ViewModels
                 }
             });
             RaisePropertyChanged("MeData");
-
         }
 
         private static int MakeRandom(int to = 10000)
@@ -319,9 +318,7 @@ namespace ValidicCSharpApp.ViewModels
             var random = new Random();
             return random.Next(0, to);
         }
-
-
-
+        
         private async Task RefreshTokenAsync(MeViewModel record)
         {
             var oac = OrganizationAuthenticationCredential;

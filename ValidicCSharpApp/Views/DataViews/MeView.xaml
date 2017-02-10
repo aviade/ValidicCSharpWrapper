@@ -20,8 +20,8 @@
             <Separator />
             <Button Command="{Binding CommandMeConnectToDevice}" Content="Connect to device"/>
             <Separator />
-            <Button Command="{Binding CommandMeRefreshToken}" Content="Refresh"/>
-            <Button Command="{Binding CommandMeRefreshTokenAll}" Content="Refresh All"/>
+            <Button Command="{Binding CommandMeRefreshToken}" Content="Refresh User Token"/>
+            <Button Command="{Binding CommandMeRefreshTokenAll}" Content="Refresh All Users Tokens"/>
         </ToolBar>
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
