@@ -13,6 +13,7 @@ namespace ValidicCSharp.Interfaces
         FromDate,
         ToDate,
         AuthenticationToken,
-        AccessToken
+        AccessToken, 
+        Expanded
     }
 }

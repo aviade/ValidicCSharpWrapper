@@ -118,6 +118,13 @@ namespace ValidicCSharp.Utility
             command.Filters.AddAccessTokenFilter(value);
             return command;
         }
+
+        public static Command AddExpanded(this Command command, string value)
+        {
+            command.Filters.AddExpanded(value);
+            return command;
+        }
+
         #region Add Filter
 
         public static List<ICommandFilter> AddFilter<T>(this List<ICommandFilter> filterList, FilterType filterType, string value) where T : ICommandFilter, new()
@@ -158,6 +165,10 @@ namespace ValidicCSharp.Utility
             return AddFilter<AccessTokenFilter>(filterList, FilterType.AccessToken, value);
         }
 
+        public static List<ICommandFilter> AddExpanded(this List<ICommandFilter> filterList, string value)
+        {
+            return AddFilter<ExpandedFilter>(filterList, FilterType.Expanded, value);
+        }
 
         #endregion
     }
