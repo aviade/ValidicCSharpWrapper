@@ -20,6 +20,8 @@ namespace ValidicCSharp.Utility
             if (fromString == null && parameter.Name == "List`1")
                 fromString = parameter.GenericTypeArguments[0].Name.ToLower();
 
+            fromString = ValidateFromString(fromString);
+
             var root = JObject.Parse(response);
 
             JObject summary = null;
@@ -71,6 +73,17 @@ namespace ValidicCSharp.Utility
                 rootObject.Summary = JsonConvert.DeserializeObject<Summary>(summary.ToString());
             ;
             return rootObject;
+        }
+
+        private static string ValidateFromString(string fromString)
+        {
+            // This method can be extended to map the sleep, fitness, routine etc classes to the respective expanded classes of Fitbit, Garmin etc.
+
+            if (fromString == typeof (FitBitExpandedSleep).Name.ToLowerInvariant())
+            {
+                fromString = typeof (Sleep).Name.ToLowerInvariant();
+            }
+            return fromString;
         }
 
         public static T Objectify<T>(this string response)
