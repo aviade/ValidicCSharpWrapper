@@ -79,7 +79,7 @@ namespace ValidicCSharp.Utility
         {
             // This method can be extended to map the sleep, fitness, routine etc classes to the respective expanded classes of Fitbit, Garmin etc.
 
-            if (fromString == typeof (FitBitExpandedSleep).Name.ToLowerInvariant())
+            if (fromString == typeof (FitbitExpandedSleep).Name.ToLowerInvariant())
             {
                 fromString = typeof (Sleep).Name.ToLowerInvariant();
             }
