@@ -12,12 +12,12 @@
        public DateTimeOffset? SleepStarttime { get; set; }
 
         [JsonProperty("minutes_to_fall_asleep")]
-        public Double? MinutesToFallAsleep { get; set; }
+        public double? MinutesToFallAsleep { get; set; }
 
         [JsonProperty("minutes_after_wakeup")]
-        public Double? MinutesAfterWakeup { get; set; }
+        public double? MinutesAfterWakeup { get; set; }
 
         [JsonProperty("efficiency")]
-        public Double? Efficiency { get; set; }
+        public double? Efficiency { get; set; }
     }
 }
