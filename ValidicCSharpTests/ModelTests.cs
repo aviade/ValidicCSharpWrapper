@@ -78,6 +78,22 @@ namespace ValidicCSharpTests
         }
 
         [Test]
+        public void CanAddAndDeleteUser()
+        {
+            var response = Customer.AddUser(MakeRandom().ToString());
+            AssertUserCreated(response);
+            var deleteResponse = Customer.DeleteUser(response.user._id);
+            Assert.AreEqual((int)HttpStatusCode.OK, (int)deleteResponse.code);
+        }
+
+        [Test]
+        public void DeleteNonExistantUser()
+        {
+            var deleteResponse = Customer.DeleteUser(MakeRandom().ToString());
+            Assert.AreEqual((int)HttpStatusCode.NotFound, (int)deleteResponse.code);
+        }
+
+        [Test]
         public void AddUserWithSameId()
         {
             var uid = MakeRandom().ToString();
@@ -291,7 +307,7 @@ namespace ValidicCSharpTests
 
         private static void AssertUserCreated(AddUserResponse response)
         {
-            Assert.AreEqual((int)StatusCode.Created, response.code, "response.code");
+            Assert.AreEqual((int)StatusCode.Created, (int)response.code, "response.code");
             Assert.IsNotNull(response.user._id, "response.user._id");
         }
     }

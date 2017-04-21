@@ -59,7 +59,7 @@ namespace ValidicCSharp.Request
         [DataMember(Name = "tobacco_cessation")] 
         Tobacco_Cessation,
         Custom
-         }
+    }
 
     public enum ClassType
     {
@@ -125,6 +125,12 @@ namespace ValidicCSharp.Request
             command.Method = HttpMethod.POST;
             command.Payload = userRequest;
             return command;
+        }
+
+        public static Command DeleteUser(this Command command, string userId)
+        {
+            command.Method = HttpMethod.DELETE;
+            return command.FromUser(userId);
         }
 
         public static Command GetLatest(this Command command)
