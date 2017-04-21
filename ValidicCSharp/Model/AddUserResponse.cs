@@ -2,10 +2,8 @@
 {
     using System.Net;
 
-    public class AddUserResponse
+    public class AddUserResponse : BaseResponse
     {
-        public HttpStatusCode code { get; set; }
-        public string message { get; set; }
         public User user { get; set; }
     }
 }
