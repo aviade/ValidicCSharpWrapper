@@ -20,7 +20,7 @@ namespace ValidicCSharpTests
                 OrganizationId = "51aca5a06dedda916400002b",
                 AccessToken = "ENTERPRISE_KEY"
             },
-            Organization = new Organization { Name = "ACME Corp" },
+            Organization = new Organization{Name = "ACME Corp"},
             Profile = new Profile { Uid = "52ffcb4bf1f70eefba000004", Gender = GenderType.M}
         };
 
