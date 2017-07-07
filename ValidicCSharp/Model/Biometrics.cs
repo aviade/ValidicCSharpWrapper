@@ -55,8 +55,14 @@ namespace ValidicCSharp.Model
         [JsonProperty("resting_heartrate")]
         public double? RestingHeartrate { get; set; }
 
+        [JsonProperty("spo2")]
+        public double? Spo2 { get; set; }
+
         [JsonProperty("systolic")]
         public double? Systolic { get; set; }
+
+        [JsonProperty("temperature")]
+        public double? Temperature { get; set; }
 
         [JsonProperty("testosterone")]
         public object Testosterone { get; set; }
