@@ -21,6 +21,9 @@ namespace ValidicCSharp.Model
 
         [JsonProperty("random_plasma_glucose_test")]
         public object RandomPlasmaGlucoseTest { get; set; }
+        
+        [JsonProperty("relationship_to_meal")]
+        public object RelationshipToMeal { get; set; }
 
         [JsonProperty("triglyceride")]
         public object Triglyceride { get; set; }
